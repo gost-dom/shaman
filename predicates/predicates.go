@@ -10,7 +10,11 @@ import (
 )
 
 // ByName is an [ElementMatcher] that matches elements by their accessibility
-// name. E.g., the element's label, or text content. The label can be
+// name.
+//
+// The accessibility name can be the element's label, or text content. The label
+// can be
+//
 //   - An associated label element
 //   - The value of an aria-label property
 //   - The text content of an element referenced by an aria-labelledby property.
@@ -19,7 +23,7 @@ import (
 // "accessibility name", which is why this is called name, not label.
 type ByName string
 
-func (n ByName) IsMatch(e dom.Element) bool { return shaman.GetName(e) == string(n) }
+func (n ByName) IsMatch(e dom.Element) bool { return shaman.ElementName(e) == string(n) }
 
 func (n ByName) String() string { return fmt.Sprintf("By accessibility name: %s", string(n)) }
 
