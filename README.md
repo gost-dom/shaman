@@ -123,7 +123,7 @@ if got := titleElm.TextContent(); got != "Expected page title" {
 
 ### Scope by landmarks
 
-Scope by landmark relevant landmark. Most tests would generally verify behaviour
+Scope by relevant landmarks. Most tests would generally verify behaviour
 of the _main_ content, typically in a `<main>` element; so to enforce the
 document structure.
 
@@ -131,11 +131,14 @@ document structure.
 mainContent := windowScope.SubScope(ByRole(ariarole.Main))
 ```
 
-Screen reader users typically rely landmarks to quickly find the relevant
-content. By writing tests to enforce a main scope, it will have a dramatic
-effect on the usability of the web application for that user base.
+Screen reader users typically rely on landmarks to find relevant content. Using
+correct landmarks has a _dramatic effect_ on the usability of the web
+application for that user base.
 
 ### Having input fields? Always scope them by form
+
+Browsers add default behaviour to input elements in a form, e.g., pressing
+<kbd>enter</kbd> tries to submit the form.
 
 ```Go
 loginForm := mainContent.SubScope(ByRole(ariarole.Form))
@@ -149,13 +152,13 @@ emailField := loginForm.Get(ByRole(ariarole.Textbox), ByName("Email"))
 
 ## Can I use this with other libraries? (e.g., selenium, playwright)
 
-Shaman is currently coupled to the interfaces exposed by Gost-DOM, but is 
-written to depend on methods defined in the DOM and HTML DOM standards
-adapted to Go idioms (errors as values, and Go naming conventions).
+Shaman is currently coupled to the interfaces exposed by Gost-DOM, but the code
+only depend on methods defined in the DOM and HTML DOM standards adapted to Go
+idioms (errors as values, and Go naming conventions).
 
-This could be coupled to general interface, with Gost-DOM being just _one_
-implementation; other implementations could support Webdriver or other browser
-automation protocols. 
+Shaman _could_ define a general interace, for which you could then write an
+adapter for other libraries. This is not a priority, but a contribution in this
+direction will not be rejected. Do reach out before starting on such work.
 
 _However_, Shaman relies on very chatty communication when processing the DOM
 tree, which would cause significant overhead using any kind of inter-process
