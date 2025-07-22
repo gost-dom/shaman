@@ -51,9 +51,10 @@ the developer:
 - When writing tests first, you have to deal with this _before_ even addressing
   the problem.
 
-Thinking in textboxes with labels, placed inside a form, the _shaman style_
-forces the developer to work in same level of abstraction as the _problem
-domain_ itself.
+The _shaman style_ of thinking in terms of textboxes with labels, placed inside
+a form, forces the developer to work in same level of abstraction as the
+_problem domain_ itself: A user interacting with a page, identifying form
+elements by the labels they have.
 
 ## Accessibility
 
@@ -95,8 +96,9 @@ changing; it detects if you forget to add a label.
 > [!NOTE]
 > In my experience, 80% of all developers and UI designers are ignorant of
 > accessibility. As a consequence any new project member are statistically very
-> likely to break the accessibility build in; if not verified at design time.
-> Fast developer-friendly tests are the fastest feedback possible. 
+> likely to break accessibility if not verified at design time. Fast
+> developer-friendly tests is the best way to detect this early, preventing an
+> unproductive path.
 >
 > (80% was a pretty conservative number. It's probably more like 95%)
 
