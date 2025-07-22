@@ -47,15 +47,22 @@ A common pattern is to assign `id` or `data-testid` attributes to elements just
 to be able to find them in test cases. This practice does adds to mental load of
 the developer:
 
-- Which `id`s to assign to elements that doen't need an ID for the application
-  _behaviour_ to work correctly.
-- When writing tests first, you now have to take this into consideration
+- Which `id`-attributes to assign to which elements?
+- When writing tests first, you have to deal with this _before_ even addressing
+  the problem.
 
-Thinking in textboxes with labels, placed inside a form, belongs to the _problem
-domain_. The _shaman style_ doesn't force the developer to deal with new
-problems introduced by technical limitations of test frameworks.
+Thinking in textboxes with labels, placed inside a form, the _shaman style_
+forces the developer to work in same level of abstraction as the _problem
+domain_ itself.
 
 ## Accessibility
+
+The shaman style encourages writing tests that implcitly verify that elements
+have the proper attributes to support accessibility, i.e., all input fields have
+labels.
+
+See the patterns section below for guidelines how to write tests that enforces a
+higher level of accessibility.
 
 ## Resilient to changes in layout
 
@@ -138,7 +145,7 @@ emailField := loginForm.Get(ByRole(ariarole.Textbox), ByName("Email"))
 > proper title. That isn't supported by shaman at the time of writing this.
 > https://github.com/gost-dom/shaman/issues/2
 
-## Can I use this with library X? (e.g., selenium, playwright)
+## Can I use this with other libraries? (e.g., selenium, playwright)
 
 Shaman is currently coupled to the interfaces exposed by Gost-DOM, but is 
 written to depend on methods defined in the DOM and HTML DOM standards
