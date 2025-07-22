@@ -1,55 +1,14 @@
 package predicates
 
 import (
-	"fmt"
-
 	"github.com/gost-dom/shaman"
-	"github.com/gost-dom/shaman/ariarole"
-
-	"github.com/gost-dom/browser/dom"
 )
 
-// ByName is an [ElementMatcher] that matches elements by their accessibility
-// name.
-//
-// The accessibility name can be the element's label, or text content. The label
-// can be
-//
-//   - An associated label element
-//   - The value of an aria-label property
-//   - The text content of an element referenced by an aria-labelledby property.
-//
-// This is called "name" not "label", as the term in ARIA is
-// "accessibility name", which is why this is called name, not label.
-type ByName string
+// ByName re-exports [shaman.ByName]
+type ByName = shaman.ByName
 
-func (n ByName) IsMatch(e dom.Element) bool { return shaman.ElementName(e) == string(n) }
+// ByRole re-exports [shaman.ByRole]
+type ByRole = shaman.ByRole
 
-func (n ByName) String() string { return fmt.Sprintf("By accessibility name: %s", string(n)) }
-
-// An [ElementPredicate] that matches elements by their [ARIA role].
-//
-// [ARIA role]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
-type ByRole ariarole.Role
-
-func (r ByRole) IsMatch(
-	e dom.Element,
-) bool {
-	return ariarole.GetElementRole(e) == ariarole.Role(r)
-}
-
-func (r ByRole) String() string { return fmt.Sprintf("By role: %s", string(r)) }
-
-type ByH1Predicate struct{}
-
-// Predicate to find THE <h1> element on the page.
-//
-// Every page should have exactly one H1 element, and it has a special meaning
-// as the page title. (The <title> in the document <head> is for browser title
-// and bookmarks, and will often include prefixes, such as site name or other,
-// which is why the page itself should have a title).
-var ByH1 = ByH1Predicate{}
-
-func (s ByH1Predicate) IsMatch(e dom.Element) bool { return e.TagName() == "H1" }
-
-func (s ByH1Predicate) String() string { return "Main heading (<h1>)" }
+// ByH1 re-exports [shamab.ByH1]
+var ByH1 = shaman.ByH1

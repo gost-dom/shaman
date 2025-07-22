@@ -7,15 +7,20 @@ import (
 	"github.com/gost-dom/browser/dom"
 )
 
-// ElementName returns the [accessibility name] of element e. It returns empty
-// string if e is nil.
+// ElementName returns the [accessibility name] of HTML element e. It returns
+// empty string if e is nil.
 //
-// The accessibility name is a descriptive name an element, e.g. for an input
-// field, it's the associated label. For a button, it's the button's text
-// content.
+// The accessibility name is a descriptive name an element, examples are:
+//   - The name for <input id="name"> is the text content an associated <label>
+//     element
+//   - The name of a <button> is its text content.
+//
+// The default name can be overridden with either aria-label or aria-labelledby
+// attributes.
+//
+// See also: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Text_labels_and_names
 //
 // [accessibility name]: https://w3c.github.io/accname/#dfn-accessible-name
-// See also: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Understanding_WCAG/Text_labels_and_names
 func ElementName(e dom.Element) string {
 	// TODO: This should be exposed as IDL attributes
 	if e == nil {

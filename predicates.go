@@ -8,14 +8,10 @@ import (
 	"github.com/gost-dom/browser/dom"
 )
 
-// ByName is an [ElementMatcher] that matches elements by their accessibility
-// name. E.g., the element's label, or text content. The label can be
-//   - An associated label element
-//   - The value of an aria-label property
-//   - The text content of an element referenced by an aria-labelledby property.
+// ByName is an [ElementPredicate] that matches elements by their accessibility
+// name.
 //
-// This is called "name" not "label", as the term in ARIA is
-// "accessibility name", which is why this is called name, not label.
+// See also: [ElementName]
 type ByName string
 
 func (n ByName) IsMatch(e dom.Element) bool { return GetName(e) == string(n) }
@@ -34,3 +30,19 @@ func (r ByRole) IsMatch(
 }
 
 func (r ByRole) String() string { return fmt.Sprintf("By role: %s", string(r)) }
+
+type byH1Predicate struct{}
+
+// ByH1 is a predicate to find the <h1> element on the page. This predicate is
+// intended to be used in a Get query that will fail if multiple elements match
+// the predicate, to ensure the page has exactly one <h1> element.
+//
+// The <h1> element is for the "Page title", and a page should have only _one_
+// title.
+//
+// See also: https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/Heading_Elements#avoid_using_multiple_h1_elements_on_one_page
+var ByH1 = byH1Predicate{}
+
+func (s byH1Predicate) IsMatch(e dom.Element) bool { return e.TagName() == "H1" }
+
+func (s byH1Predicate) String() string { return "Main heading (<h1>)" }
