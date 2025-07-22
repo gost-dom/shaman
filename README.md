@@ -8,11 +8,19 @@ building accessibility in and results in code that is not only easier to read,
 but also resilient to changes in UI that doesn't change semantics:
 
 > [!Warning]
-> This library is pre 0.1 state - breaking changes may be pushed with no
+> This library is pre 0.1! Breaking changes may be pushed with no
 > warning (where feasible, old versions will live with a deprecation warning for
 > a while)
 
+
+> [!Important]
+> Shaman is very limited in functionality. Functionality is primarily driven by
+> the needs of [Project Harmony], a test application using Gost-DOM to test an
+> HTMX-based application. As new scenarios are covered by Harmony, so will the
+> support be added to Shaman.
+
 [Gost-DOM]: https://github.com/gost-dom/browser
+[Project Harmony]: https://github.com/gost-dom/project-harmony
 
 ## Example
 
