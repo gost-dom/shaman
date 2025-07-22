@@ -27,15 +27,6 @@ func (n ByName) IsMatch(e dom.Element) bool { return shaman.ElementName(e) == st
 
 func (n ByName) String() string { return fmt.Sprintf("By accessibility name: %s", string(n)) }
 
-// An ElementPredicate is a type that checks if an element matches certain
-// criteria, and is used to fine elements in the dom. E.g., finding the input
-// element with the label "email".
-type ElementPredicate interface{ IsMatch(dom.Element) bool }
-
-type ElementPredicateFunc func(dom.Element) bool
-
-func (f ElementPredicateFunc) IsMatch(e dom.Element) bool { return f(e) }
-
 // An [ElementPredicate] that matches elements by their [ARIA role].
 //
 // [ARIA role]: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles
