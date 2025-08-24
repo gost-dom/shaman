@@ -77,17 +77,25 @@ func NewScope(t testing.TB, c dom.ElementContainer) Scope {
 // All returns an iterator over all elements in scope.
 func (h Scope) All() iter.Seq[dom.Element] {
 	return func(yield func(dom.Element) bool) {
-		for _, c := range h.Container.ChildNodes().All() {
-			if e, ok := c.(dom.Element); ok {
-				if !yield(e) {
-					return
-				}
-				for cc := range (Scope{h.t, e}).All() {
-					if !yield(cc) {
+		if self, ok := h.Container.(dom.Element); ok {
+			if !yield(self) {
+				return
+			}
+		}
+		for _, child := range h.Container.Children().All() {
+			func() {
+				next, stop := iter.Pull(Scope{h.t, child}.All())
+				defer stop()
+				for {
+					v, ok := next()
+					if !ok {
+						return
+					}
+					if !yield(v) {
 						return
 					}
 				}
-			}
+			}()
 		}
 	}
 }
