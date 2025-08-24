@@ -1,9 +1,12 @@
 package shaman_test
 
 import (
+	"fmt"
+	"net/http"
 	"slices"
 	"testing"
 
+	"github.com/gost-dom/browser"
 	"github.com/gost-dom/shaman"
 	"github.com/gost-dom/shaman/ariarole"
 	"github.com/stretchr/testify/assert"
@@ -38,4 +41,36 @@ func TestScope_Find(t *testing.T) {
 			assert.Equal(t, "Link 2", all[3].TextContent())
 		}
 	})
+}
+
+func TestWindowScope(t *testing.T) {
+	server := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/page1":
+			fmt.Fprint(w, "<div><h1>Page 1</h1></div>")
+		case "/page2":
+			fmt.Fprint(w, "<div><h1>Page 2</h1></div>")
+		default:
+			w.WriteHeader(404)
+		}
+	})
+
+	browser := browser.New(browser.WithHandler(server))
+	win, err := browser.Open("http://example.com/page1")
+	if !assert.NoError(t, err) {
+		return
+	}
+
+	scope := shaman.WindowScope(t, win)
+	h1 := scope.Find(shaman.ByH1)
+	assert.Equal(t, "Page 1", h1.TextContent())
+
+	win.Navigate("/page2")
+	h1 = scope.Find(shaman.ByH1)
+	assert.Equal(
+		t,
+		"Page 2",
+		h1.TextContent(),
+		"Window scope represents new document after navigation",
+	)
 }

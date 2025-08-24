@@ -62,37 +62,59 @@ func (o predicates) String() string {
 // Scope represents a subset of a page, and can be used to find elements withing
 // that scope.
 type Scope struct {
-	t         testing.TB
-	Container dom.ElementContainer
+	t    testing.TB
+	root containerer
 }
 
+func (s Scope) container() dom.ElementContainer { return s.root.container() }
+
+// containerer is the interface for the single method container that returns a
+// [dom.ElementContainer]. When the scope relates to a window, this will return
+// the current document.
+type containerer interface {
+	container() dom.ElementContainer
+}
+
+type windowContainerer struct{ win html.Window }
+
+func (c windowContainerer) container() dom.ElementContainer { return c.win.Document() }
+
+type simpleContainer struct{ c dom.ElementContainer }
+
+func (s simpleContainer) container() dom.ElementContainer { return s.c }
+
+// WindowScope create a new [Scope] that is bound to an [html.Window]. This
+// scope will always reflect the current page displayed in the window.
 func WindowScope(t testing.TB, win html.Window) Scope {
-	return NewScope(t, win.Document())
+	return Scope{t, windowContainerer{win}}
 }
 
+// NewScope create a new [Scope] that is bound to a single [dom.Element].
+// Holding on to a Scope returned from NewScope may return elements no longer
+// if the original element is removed from the DOM.
 func NewScope(t testing.TB, c dom.ElementContainer) Scope {
-	return Scope{t: t, Container: c}
+	return Scope{t: t, root: simpleContainer{c}}
 }
 
-// All returns an iterator over all elements in scope.
+// All returns an iterator over all elements in scope. If the scope is an
+// element, the element itself will be included.
 func (h Scope) All() iter.Seq[dom.Element] {
 	return func(yield func(dom.Element) bool) {
-		if self, ok := h.Container.(dom.Element); ok {
+		container := h.container()
+		if self, ok := container.(dom.Element); ok {
 			if !yield(self) {
 				return
 			}
 		}
-		for _, child := range h.Container.Children().All() {
+		for _, child := range container.Children().All() {
 			func() {
-				next, stop := iter.Pull(Scope{h.t, child}.All())
+				next, stop := iter.Pull(NewScope(h.t, child).All())
 				defer stop()
 				for {
 					v, ok := next()
-					if !ok {
+					if !ok || !yield(v) {
 						return
-					}
-					if !yield(v) {
-						return
+
 					}
 				}
 			}()
@@ -100,8 +122,9 @@ func (h Scope) All() iter.Seq[dom.Element] {
 	}
 }
 
-func (h Scope) FindAll(opts ...ElementPredicate) iter.Seq[dom.Element] {
-	opt := predicates(opts)
+// FindAll returns a sequence of all elements that match the specified options.
+func (h Scope) FindAll(options ...ElementPredicate) iter.Seq[dom.Element] {
+	opt := predicates(options)
 	return func(yield func(dom.Element) bool) {
 		next, done := iter.Pull(h.All())
 		defer done()
@@ -119,9 +142,12 @@ func (h Scope) FindAll(opts ...ElementPredicate) iter.Seq[dom.Element] {
 	}
 }
 
-// Find returns an element that matches the options. At most one element is
-// expected to exist in the dom mathing the options. If more than one
-// is found, a fatal error is generated.
+// Find returns an element that matches the options if any. At most one element
+// is expected to exist in the dom mathing the options. Returns nil if no
+// element is found. If more than one is found, Fatalf is called on the
+// specified [testing.TB] instance.
+//
+// Note: This must run in the same goroutine as the test case.
 func (h Scope) Find(opts ...ElementPredicate) html.HTMLElement {
 	h.t.Helper()
 	next, stop := iter.Pull(h.FindAll(opts...))
@@ -144,8 +170,9 @@ func (h Scope) Find(opts ...ElementPredicate) html.HTMLElement {
 // expected to exist in the dom mathing the options. If zero, or more than one
 // are found, a fatal error is generated.
 func (h Scope) Get(opts ...ElementPredicate) html.HTMLElement {
+	container := h.container()
 	h.t.Helper()
-	if !h.Container.IsConnected() {
+	if !container.IsConnected() {
 		h.t.Logf("WARN (shaman): Scope root element not connected to document")
 	}
 	if res := h.Find(opts...); res != nil {
