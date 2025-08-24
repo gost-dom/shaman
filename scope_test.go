@@ -4,8 +4,6 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/gost-dom/browser/dom"
-	"github.com/gost-dom/browser/html"
 	"github.com/gost-dom/shaman"
 	"github.com/gost-dom/shaman/ariarole"
 	"github.com/stretchr/testify/assert"
@@ -40,35 +38,4 @@ func TestScope_Find(t *testing.T) {
 			assert.Equal(t, "Link 2", all[3].TextContent())
 		}
 	})
-}
-
-type container struct{ dom.ElementContainer }
-
-type containerFunc func(dom.Element)
-
-func createRoot(tagName string, opt ...containerFunc) dom.Element {
-	w := html.NewWindow()
-	d := html.NewHTMLDocument(w)
-	e := d.CreateElement(tagName)
-	for _, o := range opt {
-		o(e)
-	}
-	return e
-}
-
-func child(tagName string, opt ...containerFunc) containerFunc {
-	return func(e dom.Element) {
-		d := e.OwnerDocument()
-		child := d.CreateElement(tagName)
-		for _, o := range opt {
-			o(child)
-		}
-		e.AppendChild(child)
-	}
-}
-
-func textContent(text string) containerFunc {
-	return func(e dom.Element) {
-		e.SetTextContent(text)
-	}
 }
