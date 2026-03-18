@@ -77,7 +77,12 @@ type containerer interface {
 
 type windowContainerer struct{ win html.Window }
 
-func (c windowContainerer) container() dom.ElementContainer { return c.win.Document() }
+func (c windowContainerer) container() dom.ElementContainer {
+	if c.win == nil {
+		return nil
+	}
+	return c.win.Document()
+}
 
 type simpleContainer struct{ c dom.ElementContainer }
 

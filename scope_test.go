@@ -41,7 +41,15 @@ func TestScope_Find(t *testing.T) {
 			assert.Equal(t, "Link 2", all[3].TextContent())
 		}
 	})
+}
 
+func TestWindowScope_All(t *testing.T) {
+	t.Run("Returns empty sequence if container is nil", func(t *testing.T) {
+		t.Parallel()
+		scope := shaman.WindowScope(t, nil)
+		elements := slices.Collect(scope.All())
+		assert.Empty(t, elements)
+	})
 }
 
 func TestScope_All(t *testing.T) {
@@ -49,6 +57,13 @@ func TestScope_All(t *testing.T) {
 		t.Parallel()
 		scope := shaman.NewScope(t, nil)
 		elements := slices.Collect(scope.All())
+		assert.Empty(t, elements)
+	})
+
+	t.Run("FindAll Returns empty sequence if container is nil", func(t *testing.T) {
+		t.Parallel()
+		scope := shaman.NewScope(t, nil)
+		elements := slices.Collect(scope.FindAll(shaman.ByRole(ariarole.Button)))
 		assert.Empty(t, elements)
 	})
 }
