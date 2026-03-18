@@ -101,6 +101,9 @@ func NewScope(t testing.TB, c dom.ElementContainer) Scope {
 func (h Scope) All() iter.Seq[dom.Element] {
 	return func(yield func(dom.Element) bool) {
 		container := h.container()
+		if container == nil {
+			return
+		}
 		if self, ok := container.(dom.Element); ok {
 			if !yield(self) {
 				return
