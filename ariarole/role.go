@@ -18,13 +18,14 @@ type Role string
 
 const (
 	// None represents an element that doesn't have a role specified.
-	None   Role = ""
-	Alert  Role = "alert"
-	Button Role = "button"
-	Form   Role = "form"
-	Link   Role = "link"
-	Main   Role = "main"
-	Banner Role = "banner"
+	None       Role = ""
+	Alert      Role = "alert"
+	Button     Role = "button"
+	Form       Role = "form"
+	Link       Role = "link"
+	Main       Role = "main"
+	Banner     Role = "banner"
+	Navigation Role = "navigation"
 
 	// PasswordText represents the "password text" role, which isn't an official
 	// ARIA role. It is reported by Firefox's accessibility tools, and helpful
@@ -36,11 +37,12 @@ const (
 )
 
 var elementRoles map[string]Role = map[string]Role{
-	"MAIN":   Main,
-	"BUTTON": Button,
 	"A":      Link,
+	"BUTTON": Button,
 	"FORM":   Form,
 	"HEADER": Banner,
+	"MAIN":   Main,
+	"NAV":    Navigation,
 }
 
 func GetElementRole(e dom.Element) Role {
