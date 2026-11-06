@@ -201,6 +201,7 @@ func (h Scope) Query(opts ...ElementPredicate) (e html.HTMLElement, ok bool) {
 }
 
 func (h Scope) Subscope(opts ...ElementPredicate) Scope {
+	h.t.Helper()
 	return NewScope(h.t, h.Get(opts...))
 }
 
