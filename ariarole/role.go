@@ -20,20 +20,20 @@ const (
 	// None represents an element that doesn't have a role specified.
 	None       Role = ""
 	Alert      Role = "alert"
+	Banner     Role = "banner"
 	Button     Role = "button"
+	Checkbox   Role = "checkbox"
 	Form       Role = "form"
 	Link       Role = "link"
 	Main       Role = "main"
-	Banner     Role = "banner"
 	Navigation Role = "navigation"
+	Textbox    Role = "textbox"
 
 	// PasswordText represents the "password text" role, which isn't an official
 	// ARIA role. It is reported by Firefox's accessibility tools, and helpful
 	// as password fields don't actually have an official role, i.e., you cannot
 	// find them as a textbox role.
 	PasswordText Role = "password text"
-	Textbox      Role = "textbox"
-	Checkbox     Role = "checkbox"
 )
 
 var elementRoles map[string]Role = map[string]Role{
