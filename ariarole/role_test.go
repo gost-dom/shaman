@@ -21,6 +21,8 @@ func TestARIARoles(t *testing.T) {
 		{TagName: "", RoleAttr: "alert", Want: ariarole.Alert},
 		{TagName: "header", RoleAttr: "banner", Want: ariarole.Banner},
 		{TagName: "nav", RoleAttr: "navigation", Want: ariarole.Navigation},
+		{TagName: "select", RoleAttr: "combobox", Want: ariarole.Combobox},
+		{TagName: "option", RoleAttr: "option", Want: ariarole.Option},
 	}
 
 	for _, spec := range specs {

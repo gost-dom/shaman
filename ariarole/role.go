@@ -23,10 +23,12 @@ const (
 	Banner     Role = "banner"
 	Button     Role = "button"
 	Checkbox   Role = "checkbox"
+	Combobox   Role = "combobox"
 	Form       Role = "form"
 	Link       Role = "link"
 	Main       Role = "main"
 	Navigation Role = "navigation"
+	Option     Role = "option"
 	Textbox    Role = "textbox"
 
 	// PasswordText represents the "password text" role, which isn't an official
@@ -43,6 +45,8 @@ var elementRoles map[string]Role = map[string]Role{
 	"HEADER": Banner,
 	"MAIN":   Main,
 	"NAV":    Navigation,
+	"OPTION": Option,
+	"SELECT": Combobox,
 }
 
 func GetElementRole(e dom.Element) Role {
