@@ -243,7 +243,20 @@ func (tb TextboxRole) Write(input string) { tb.SetAttribute("value", input) }
 func (tb TextboxRole) Clear() { tb.SetAttribute("value", "") }
 
 func (tb TextboxRole) ARIADescription() string {
-	return GetDescription(tb)
+	return ElementDescription(tb)
+}
+
+// TODO: Check input field native validation
+func (tb TextboxRole) Valid() bool {
+	if invalid, ok := tb.GetAttribute("aria-invalid"); ok {
+		switch invalid {
+		case "false", "":
+			return true
+		default:
+			return false
+		}
+	}
+	return true
 }
 
 type CheckboxRole struct {
