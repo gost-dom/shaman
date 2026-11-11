@@ -66,7 +66,12 @@ type Scope struct {
 	root containerer
 }
 
-func (s Scope) container() dom.ElementContainer { return s.root.container() }
+// Element returns the root element representing the current subset. When the
+// scope represents the window, the document element is returned.
+//
+// Note: This exists as an escape hatch, when shaman doesn't provide the
+// high-level operations necessary to inspect or interact with the page.
+func (s Scope) Element() dom.ElementContainer { return s.root.container() }
 
 // containerer is the interface for the single method container that returns a
 // [dom.ElementContainer]. When the scope relates to a window, this will return
@@ -105,7 +110,7 @@ func NewScope(t testing.TB, c dom.ElementContainer) Scope {
 // element, the element itself will be included.
 func (h Scope) All() iter.Seq[dom.Element] {
 	return func(yield func(dom.Element) bool) {
-		container := h.container()
+		container := h.Element()
 		if container == nil {
 			return
 		}
@@ -178,7 +183,7 @@ func (h Scope) Find(opts ...ElementPredicate) html.HTMLElement {
 // expected to exist in the dom mathing the options. If zero, or more than one
 // are found, a fatal error is generated.
 func (h Scope) Get(opts ...ElementPredicate) html.HTMLElement {
-	container := h.container()
+	container := h.Element()
 	h.t.Helper()
 	if !container.IsConnected() {
 		h.t.Logf("WARN (shaman): Scope root element not connected to document")
