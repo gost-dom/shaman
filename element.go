@@ -41,7 +41,7 @@ func ElementName(e dom.Element) string {
 		return l
 	}
 	switch e.TagName() {
-	case "INPUT":
+	case "INPUT", "SELECT":
 		if id, ok := e.GetAttribute("id"); ok {
 			if label, _ := doc.QuerySelector(fmt.Sprintf("label[for='%s']", id)); label != nil {
 				return label.TextContent()

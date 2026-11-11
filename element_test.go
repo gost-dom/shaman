@@ -56,6 +56,14 @@ func TestElementName(t *testing.T) {
 		assert.Equal(t, "Click me!", ElementName(doc.GetElementById("btn")))
 	})
 
+	t.Run("<select>", func(t *testing.T) {
+		doc := loadHTML(t, `
+			<label for="input-1">Value 1</label><select id="input-1"></select>
+			<label for="input-2">Value 2</label><select id="input-2"></select>
+			`)
+		assert.Equal(t, "Value 1", ElementName(doc.GetElementById("input-1")))
+	})
+
 	t.Run("<a>", func(t *testing.T) {
 		doc := loadHTML(t, `<a href="dummy" id="link">Click me!</button>`)
 		assert.Equal(t, "Click me!", ElementName(doc.GetElementById("link")))
